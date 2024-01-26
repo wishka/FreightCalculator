@@ -1,7 +1,7 @@
 require 'json'
 require 'net/http'
 
-class FreightCalculator
+class DistCalculator
   def initialize(weight, length, width, height, origin, destination)
     @weight = weight
     @length = length
@@ -16,8 +16,14 @@ class FreightCalculator
     uri = URI(url)
     response = Net::HTTP.get(uri)
     data = JSON.parse(response)
-    distance = data['rows'][0]['elements'][0]['distance']['value']
-    distance
+
+    if data && data['rows'] && data['rows'][0] && data['rows'][0]['elements'] && data['rows'][0]['elements'][0] && data['rows'][0]['elements'][0]['distance'] && data['rows'][0]['elements'][0]['distance']['value']
+      distance = data['rows'][0]['elements'][0]['distance']['value']
+      return distance
+    else
+      # Handle the case when the data is not in the expected format
+      return nil
+    end
   end
 
   def calculate_price
@@ -37,6 +43,6 @@ class FreightCalculator
 end
 
 # Example usage:
-calculator = FreightCalculator.new(10, 50, 40, 30, 'Origin', 'Destination')
-result = calculator.calculate_price
-puts result
+# calculator = FreightCalculator.new(10, 50, 40, 30, 'New York', 'Vermont')
+# result = calculator.calculate_price
+# puts result

@@ -1,0 +1,67 @@
+<h1>New Shipment</h1>
+
+<%= form_with model: @shipment, url: shipments_path, data: {turbo: false}, html: {multipart: true}, remote: true do |form| %>
+  <% if @shipment.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@shipment.errors.count, "error") %> prohibited this shipment from being saved:</h2>
+
+      <ul>
+      <% @shipment.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="flex-container">
+    <div class="form-group">
+      <%= form.label :first_name %>
+      <%= form.text_field :first_name, class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <%= form.label :last_name %>
+      <%= form.text_field :last_name, class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <%= form.label :middle_name %>
+      <%= form.text_field :middle_name, class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <%= form.label :phone %>
+      <%= form.text_field :phone, class: 'form-control', autofocus: true, placeholder: 'xxx-xxx-xxxx'%>
+    </div>
+    <div class="form-group">
+      <%= form.label :email %>
+      <%= form.email_field :email, class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <%= form.label :weight %>
+      <%= form.text_field :weight, class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <%= form.label :length %>
+      <%= form.text_field :length, class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <%= form.label :width %>
+      <%= form.text_field :width, class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <%= form.label :height %>
+      <%= form.text_field :height, class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <%= form.label :origin %>
+      <%= form.text_field :origin, class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <%= form.label :destination %>
+      <%= form.text_field :destination, class: 'form-control' %>
+    </div>
+  </div>
+
+  <!-- Остальные поля формы -->
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
