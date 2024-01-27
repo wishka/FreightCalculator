@@ -1,21 +1,22 @@
 <div class="container">
   <h1>Shipments List</h1>
+  <%= paginate @shipments, window: 2 %>
   <% @shipments.each do |shipment| %>
-    <table class="table">
+    <table class="table" id="shipmentTable">
       <thead>
         <tr>
           <th scope="col">Shipment id</th>
           <th scope="col">Last Name</th>
           <th scope="col">First Name</th>
           <th scope="col">Middle Name</th>
-          <th scope="col">Phone</th>
-          <th scope="col">Email</th>
           <th scope="col">Weight</th>
           <th scope="col">Length</th>
           <th scope="col">Width</th>
           <th scope="col">Height</th>
           <th scope="col">Origin</th>
           <th scope="col">Destination</th>
+          <th scope="col">Created at</th>
+          <th scope="col">Price</th>
         </tr>
       </thead>
       <tbody>
@@ -24,17 +25,48 @@
             <td><%= shipment.last_name %></td>
             <td><%= shipment.first_name %></td>
             <td><%= shipment.middle_name %></td>
-            <td><%= shipment.phone %></td>
-            <td><%= shipment.email %></td>
             <td><%= shipment.weight %></td>
             <td><%= shipment.length %></td>
             <td><%= shipment.width %></td>
             <td><%= shipment.height %></td>
             <td><%= shipment.origin %></td>
-            <td><%= shipment.destination %></td>            
+            <td><%= shipment.destination %></td> 
+            <td><%= shipment.created_at %></td>     
+            <%# <td><%= shipment.calculate_price[:price] %></td>          %>
         </tr>
       </tbody>
     </table>
+    
 <% end %>
-  <%= link_to 'Back', root_path %>
+<%= paginate @shipments, window: 2 %>
   </div>
+
+<script>
+  // Получаем ссылку на таблицу
+  const table = document.getElementById('shipmentTable');
+
+  // Получаем все строки таблицы
+  const rows = Array.from(table.getElementsByTagName('tr'));
+
+  // Удаляем первую строку (заголовок)
+  rows.shift();
+
+  // Функция для получения значения shipment.created_at из строки
+  const getCreatedAtValue = (row) => {
+    const createdAtCell = row.getElementsByTagName('td')[12];
+    return createdAtCell.textContent;
+  };
+
+  // Сортируем строки по shipment.created_at
+  rows.sort((a, b) => {
+    const createdAtA = getCreatedAtValue(a);
+    const createdAtB = getCreatedAtValue(b);
+    return new Date(createdAtA) - new Date(createdAtB);
+  });
+
+  // Удаляем все строки из таблицы
+  rows.forEach((row) => table.removeChild(row));
+
+  // Вставляем отсортированные строки обратно в таблицу
+  rows.forEach((row) => table.appendChild(row));
+</script>

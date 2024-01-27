@@ -6,7 +6,7 @@ class ShipmentsController < ApplicationController
   end
 
   def index
-    @shipments = Shipment.where(email: current_user.email)
+    @shipments = Shipment.where(email: current_user.email).page(params[:page])
   end
 
   def create
