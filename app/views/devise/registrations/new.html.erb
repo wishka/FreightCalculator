@@ -24,6 +24,10 @@
   <div class="field">
     <%= f.file_field :avatar %>
   </div>
+  
+  <div class="hidden_field">
+    <%= f.hidden_field :organization, value: Organization.first.id %>
+  </div>
 
   <div class="actions">
     <%= f.submit "Sign up" %>

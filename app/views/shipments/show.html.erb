@@ -42,7 +42,7 @@
   <% end %>
   <h2>Price</h2>
 
-  <p><strong>Weight:</strong> <%= @price[:weight] %> kg</p>
+  <p><strong>Weight:</strong> <%= shipment.calculate_price[:price].to_currency %></p>
   <!-- Остальные поля цены -->
 
   <%= link_to 'Back', root_path %>

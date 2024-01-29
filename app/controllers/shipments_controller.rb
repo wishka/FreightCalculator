@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ShipmentsController < ApplicationController
   before_action :authenticate_user!
 
@@ -6,13 +8,22 @@ class ShipmentsController < ApplicationController
   end
 
   def index
-    @shipments = Shipment.where(email: current_user.email).page(params[:page])
+    if current_user.organization_admin?
+      @shipments = Shipment.all.page(params[:page])
+    else
+      @shipments = Shipment.where(email: current_user.email).page(params[:page])
+    end
+    @shipments = @shipments.order(created_at: :desc) if params[:sort] == 'date'
+    @shipments = @shipments.order(price: :asc) if params[:sort] == 'price'
+    # @shipments = @shipments.order(distance: :asc) if params[:sort] == 'distance'
   end
 
   def create
     @shipment = Shipment.new(shipment_params)
     if @shipment.save
       redirect_to @shipment
+      message = 'Your shipment is successfully created!'
+      SendNotifyWorker.perform_async(current_user.id, message)
     else
       render :new
     end
@@ -26,6 +37,7 @@ class ShipmentsController < ApplicationController
   private
 
   def shipment_params
-    params.require(:shipment).permit(:first_name, :last_name, :middle_name, :phone, :email, :weight, :length, :width, :height, :origin, :destination)
+    params.require(:shipment).permit(:first_name, :last_name, :middle_name, :phone, :email, :weight, :length, :width,
+                                     :height, :origin, :destination)
   end
 end

@@ -1,54 +1,57 @@
+# frozen_string_literal: true
+
 require_relative 'calc_distance'
 
 class Shipment < ApplicationRecord
   include AASM
 
   aasm do
-    state :started, initial: true
+    state :pending, initial: true
     state :approved, :rejected
 
     after_all_transitions :notify_somebody
 
     event :approve do
-      transitions from: :started, to: :approved
+      transitions from: :pending, to: :approved
+      after do
+        NotificationMailer.approval_notification(self).deliver_later
+      end
     end
 
     event :reject do
-      transitions from: :started, to: :rejected
+      transitions from: :pending, to: :rejected
+      after do
+        NotificationMailer.rejection_notification(self).deliver_later
+      end
     end
   end
 
-  def notify_somebody; end
-
-  validates :first_name, :last_name, :middle_name, :phone, :email, :weight, :length, :width, :height, :origin, :destination, presence: true
+  validates :first_name, :last_name, :middle_name, :phone, :email, :weight, :length, :width, :height, :origin,
+            :destination, presence: true
   belongs_to :user, dependent: :destroy
   paginates_per 5
-
-  def calculate_distance
-    url = "https://api.distancematrix.ai/maps/api/distancematrix/json?origins=#{@origin}&destinations=#{@destination}&key=Q4SHo8CIVXasF64BJVO7rsmS0czrg8ZLyrtd08IHcNO4p46k8OCu0tnPGPGPjK8R"
-    uri = URI(url)
-    response = Net::HTTP.get(uri)
-    data = JSON.parse(response)
-
-    if data && data['rows'] && data['rows'][0] && data['rows'][0]['elements'] && data['rows'][0]['elements'][0] && data['rows'][0]['elements'][0]['distance'] && data['rows'][0]['elements'][0]['distance']['value']
-      distance = data['rows'][0]['elements'][0]['distance']['value']
-      return distance
-    else
-      # Handle the case when the data is not in the expected format
-      return nil
-    end
-  end
 
   def calculate_price
     calculator = DistCalculator.new(weight, length, width, height, origin, destination)
     calculator.calculate_price
   end
 
-  def self.ransackable_attributes(auth_object = nil)
-    ["created_at", "destination", "email", "first_name", "height", "id", "last_name", "length", "middle_name", "origin", "phone", "updated_at", "weight", "width", "aasm_state"]
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[created_at destination email first_name height id last_name length middle_name
+       origin phone updated_at weight width aasm_state]
   end
 
-  def self.ransackable_associations(auth_object = nil)
-    ["user"]
+  def self.ransackable_associations(_auth_object = nil)
+    ['user']
+  end
+
+  private
+
+  def send_approval_notification
+    SendNotifyWorker.perform_async(user_id, id)
+  end
+
+  def send_rejection_notification
+    SendNotifyWorker.perform_async(user_id, id)
   end
 end

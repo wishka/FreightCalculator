@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::Base
   before_action :authenticate_user!
   protect_from_forgery with: :null_session
@@ -9,5 +11,4 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit(:sign_up, keys: [:avatar])
     devise_parameter_sanitizer.permit(:account_update, keys: [:avatar])
   end
-
 end

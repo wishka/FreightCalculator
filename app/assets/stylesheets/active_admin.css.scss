@@ -22,5 +22,5 @@ $approved-color: green;
 .status_tag {
   &.rejected { background: $rejected-color; }
   &.approved { background: $approved-color; }
-  &.started { background-color: aqua;}
+  &.pending { background-color: aqua;}
 }
