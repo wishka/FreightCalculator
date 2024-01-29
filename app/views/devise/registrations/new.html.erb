@@ -26,7 +26,7 @@
   </div>
   
   <div class="hidden_field">
-    <%= f.hidden_field :organization, value: Organization.first.id %>
+    <%= f.hidden_field :organization_id, value: "#{Organization.first.id}"  %>
   </div>
 
   <div class="actions">

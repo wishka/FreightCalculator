@@ -6,7 +6,7 @@ RSpec.describe OrganizationsController, type: :controller do
   describe 'GET #index' do
     context 'when organization admin' do
       it 'returns a success response' do
-        organization_admin = create(:user) # используем фабрику user по умолчанию
+        organization_admin = create(:user, :organization_admin)
         sign_in organization_admin
 
         get :index
@@ -17,7 +17,7 @@ RSpec.describe OrganizationsController, type: :controller do
 
     context 'when operator' do
       it 'returns a success response' do
-        operator = create(:user, :operator) # используем фабрику user с trait :operator
+        operator = create(:user, :operator)
         sign_in operator
 
         get :index
@@ -28,8 +28,8 @@ RSpec.describe OrganizationsController, type: :controller do
 
     context 'with operator_id parameter' do
       it 'filters organizations by operator' do
-        organization_admin = create(:user, role: :organization_admin)
-        operator = create(:user, role: :operator, organization: organization_admin.organization)
+        organization_admin = create(:user, :organization_admin)
+        operator = create(:user, :operator, organization: organization_admin.organization)
         sign_in organization_admin
 
         get :index, params: { operator_id: operator.id }
@@ -42,7 +42,7 @@ RSpec.describe OrganizationsController, type: :controller do
   describe 'GET #show' do
     context 'when organization admin' do
       it 'returns a success response' do
-        organization_admin = create(:user, role: :organization_admin)
+        organization_admin = create(:user, :organization_admin)
         organization = organization_admin.organization
         sign_in organization_admin
 
@@ -54,7 +54,7 @@ RSpec.describe OrganizationsController, type: :controller do
 
     context 'when operator of the organization' do
       it 'returns a success response' do
-        operator = create(:user, role: :operator)
+        operator = create(:user, :operator)
         organization = operator.organization
         sign_in operator
 
@@ -66,7 +66,7 @@ RSpec.describe OrganizationsController, type: :controller do
 
     context 'when operator of another organization' do
       it 'returns an unauthorized response' do
-        operator = create(:user, role: :operator)
+        operator = create(:user, :operator)
         organization = create(:organization)
         sign_in operator
 
