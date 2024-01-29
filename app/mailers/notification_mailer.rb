@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class NotificationMailer < ApplicationMailer
   def approval_notification(user)
     @user = user

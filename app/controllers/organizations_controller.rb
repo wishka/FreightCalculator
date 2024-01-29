@@ -5,7 +5,7 @@ class OrganizationsController < ApplicationController
     @organizations = Organization.all
     authorize @organizations
 
-    return unless params[:operator_id].present?
+    return unless current_user.organization_admin?
 
     @operators = User.where(id: params[:operator_id])
     @organizations = @organizations.joins(:users).where(users: { id: @operators })

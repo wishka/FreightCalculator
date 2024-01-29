@@ -36,6 +36,11 @@ class Shipment < ApplicationRecord
     calculator.calculate_price
   end
 
+  def calculate_distance
+    dist_calculator = DistCalculator.new(weight, length, width, height, origin, destination)
+    dist_calculator.calculate_distance / 1000
+  end
+
   def self.ransackable_attributes(_auth_object = nil)
     %w[created_at destination email first_name height id last_name length middle_name
        origin phone updated_at weight width aasm_state]

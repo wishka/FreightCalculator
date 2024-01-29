@@ -15,6 +15,7 @@
           <th scope="col">Height</th>
           <th scope="col">Origin</th>
           <th scope="col">Destination</th>
+          <th scope="col"><%= link_to "Distance", shipments_path(sort: 'distance') %></th>
           <th scope="col"><%= link_to "Created at", shipments_path(sort: 'date') %></th>
           <th scope="col"><%= link_to "Price", shipments_path(sort: 'price') %></th>
         </tr>
@@ -35,12 +36,13 @@
             <td><%= shipment.height %></td>
             <td><%= shipment.origin %></td>
             <td><%= shipment.destination %></td> 
+            <td><%= shipment.calculate_distance %>km</td> 
             <td><%= shipment.created_at.to_date %></td>     
-            <%# <td><%= shipment.calculate_price[:price] %></td>          %>
+            <td><%= shipment.calculate_price[:price] %></td> 
         </tr>
       </tbody>
     </table>
     
 <% end %>
-<%# <%= paginate @shipments, window: 2 %> %>
+<%= paginate @shipments, window: 2 %>
   </div>

@@ -6,7 +6,7 @@ RSpec.describe OrganizationsController, type: :controller do
   describe 'GET #index' do
     context 'when organization admin' do
       it 'returns a success response' do
-        organization_admin = create(:user, role: :organization_admin)
+        organization_admin = create(:user) # используем фабрику user по умолчанию
         sign_in organization_admin
 
         get :index
@@ -17,7 +17,7 @@ RSpec.describe OrganizationsController, type: :controller do
 
     context 'when operator' do
       it 'returns a success response' do
-        operator = create(:user, role: :operator)
+        operator = create(:user, :operator) # используем фабрику user с trait :operator
         sign_in operator
 
         get :index

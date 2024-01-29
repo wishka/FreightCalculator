@@ -8,14 +8,14 @@ class ShipmentsController < ApplicationController
   end
 
   def index
-    if current_user.organization_admin?
-      @shipments = Shipment.all.page(params[:page])
-    else
-      @shipments = Shipment.where(email: current_user.email).page(params[:page])
-    end
+    @shipments = if current_user.organization_admin?
+                   Shipment.all.page(params[:page])
+                 else
+                   Shipment.where(email: current_user.email).page(params[:page])
+                 end
     @shipments = @shipments.order(created_at: :desc) if params[:sort] == 'date'
     @shipments = @shipments.order(price: :asc) if params[:sort] == 'price'
-    # @shipments = @shipments.order(distance: :asc) if params[:sort] == 'distance'
+    @shipments = @shipments.order(distance: :asc) if params[:sort] == 'distance'
   end
 
   def create

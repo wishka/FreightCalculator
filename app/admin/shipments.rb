@@ -21,11 +21,11 @@ ActiveAdmin.register Shipment do
 
   member_action :approve, method: :put do
     resource.approve!
-    redirect_to admin_path(resource), notice: "Shipment approved!"
+    redirect_to admin_path(resource), notice: 'Shipment approved!'
   end
   member_action :reject, method: :put do
     resource.reject!
-    redirect_to admin_path(resource), notice: "Shipment rejected!"
+    redirect_to admin_path(resource), notice: 'Shipment rejected!'
   end
 
   # actions defaults: true do |shipment|

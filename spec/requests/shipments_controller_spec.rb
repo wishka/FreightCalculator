@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'rails_helper'
+
 RSpec.describe ShipmentsController, type: :controller do
   let(:user) { create(:user) }
   let(:admin_user) { create(:user, organization_admin: true) }
